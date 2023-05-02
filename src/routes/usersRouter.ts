@@ -1,4 +1,4 @@
-import { createUsers, getUserById, getUsers } from 'controllers/users';
+import { createUsers, getUserById, getUsers } from '../controllers/users';
 import { Router } from 'express';
 
 const usersRouter = Router();
