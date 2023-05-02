@@ -19,3 +19,6 @@ const cardSchema = new Schema({
     required: true,
   },
 });
+
+// создаём модель и экспортируем её
+export default mongoose.model('card', cardSchema)
