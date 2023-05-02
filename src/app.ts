@@ -1,15 +1,17 @@
-import express from "express";
+import express from 'express';
 import path from "path";
 
 const { PORT = 3000 } = process.env;
 
 const app = express();
 
-const start = async () => {
+const start = () => {
   try {
-    await app.listen(PORT);
+    app.listen(PORT);
     console.log("Сервер запущен", PORT);
   } catch (err) {
     console.log("Ошибка подключения", err);
   }
 };
+
+start();
