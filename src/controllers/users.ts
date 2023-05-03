@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/user";
+import { IAppRequest } from "utils/types";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -40,6 +41,34 @@ export const createUsers = async (req: Request, res: Response) => {
       avatar: avatar,
     });
     res.status(201).json(user);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Произошла ошибка на сервере" });
+  }
+};
+
+export const patchUserData = async (req: Request, res: Response) => {
+  const { name, about } = req.body;
+  const userId = (req as IAppRequest).user!._id;
+
+  if (!name || !about) {
+    return res
+      .status(400)
+      .json({ message: "Необходимо указать `name` и `about`" });
+  }
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { name, about },
+      { new: true, runValidators: true }
+    );
+    
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Не удалось найти пользователя" });
+    }
+
+    res.status(200).json({ data: updatedUser });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Произошла ошибка на сервере" });
