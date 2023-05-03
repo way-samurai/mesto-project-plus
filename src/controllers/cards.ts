@@ -1,7 +1,13 @@
-import { Request, Response } from "express";
-import Card from "../models/card";
-import { IAppRequest } from "../utils/types";
-import { BAD_REQUEST_STATUS, CREATED_STATUS, NOT_FOUND, SERVER_ERROR_STATUS, SUCCESS_STATUS } from "constants/constants";
+import { Request, Response } from 'express';
+import Card from '../models/card';
+import { IAppRequest } from '../utils/types';
+import {
+  BAD_REQUEST_STATUS,
+  CREATED_STATUS,
+  NOT_FOUND,
+  SERVER_ERROR_STATUS,
+  SUCCESS_STATUS,
+} from '../constants/constants';
 
 export const getCards = async (req: Request, res: Response) => {
   try {
@@ -20,7 +26,9 @@ export const createCard = async (req: Request, res: Response) => {
 
   try {
     if (!name || !link) {
-      return res.status(BAD_REQUEST_STATUS).json({ message: "Не все поля заполнены" });
+      return res
+        .status(BAD_REQUEST_STATUS)
+        .json({ message: 'Не все поля заполнены' });
     }
 
     const card = await Card.create({
@@ -42,10 +50,12 @@ export const deleteCard = async (req: Request, res: Response) => {
   try {
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) {
-      return res.status(BAD_REQUEST_STATUS).json({ message: "Не удалось найти карточку" });
+      return res
+        .status(BAD_REQUEST_STATUS)
+        .json({ message: 'Не удалось найти карточку' });
     }
 
-    res.status(SUCCESS_STATUS ).json({ data: card });
+    res.status(SUCCESS_STATUS).json({ data: card });
   } catch (error) {
     res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
@@ -60,10 +70,12 @@ export const likeCardHandler = async (req: Request, res: Response) => {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
       { $addToSet: { likes: userId } },
-      { new: true }
+      { new: true },
     );
     if (!updatedCard) {
-      return res.status(NOT_FOUND).json({ message: "Не удалось найти карточку" });
+      return res
+        .status(NOT_FOUND)
+        .json({ message: 'Не удалось найти карточку' });
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedCard });
@@ -81,13 +93,15 @@ export const deleteLikeCardHandler = async (req: Request, res: Response) => {
     const updatedCard = await Card.findByIdAndUpdate(
       cardId,
       { $pull: { likes: userId } },
-      { new: true }
+      { new: true },
     );
     if (!updatedCard) {
-      return res.status(NOT_FOUND).json({ message: "Не удалось найти карточку" });
+      return res
+        .status(NOT_FOUND)
+        .json({ message: 'Не удалось найти карточку' });
     }
 
-    res.status(SUCCESS_STATUS ).json({ data: updatedCard });
+    res.status(SUCCESS_STATUS).json({ data: updatedCard });
   } catch (error) {
     res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,

@@ -4,15 +4,10 @@ const NOT_FOUND = 404;
 const BAD_REQUEST_STATUS = 400;
 const SERVER_ERROR_STATUS = 500;
 
-const MISSING_FIELDS_ERROR = "Не все поля заполнены";
-const SERVER_ERROR_MESSAGE = "Произошла ошибка на сервере";
-
 export {
   SUCCESS_STATUS,
   CREATED_STATUS,
   NOT_FOUND,
   BAD_REQUEST_STATUS,
   SERVER_ERROR_STATUS,
-  MISSING_FIELDS_ERROR,
-  SERVER_ERROR_MESSAGE,
 };

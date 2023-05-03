@@ -1,7 +1,9 @@
-import { Request, Response } from "express";
-import User from "../models/user";
-import { IAppRequest } from "../utils/types";
-import { BAD_REQUEST_STATUS, CREATED_STATUS, NOT_FOUND, SERVER_ERROR_STATUS, SUCCESS_STATUS } from "constants/constants";
+import { Request, Response } from 'express';
+import User from '../models/user';
+import { IAppRequest } from '../utils/types';
+import {
+  BAD_REQUEST_STATUS, CREATED_STATUS, NOT_FOUND, SERVER_ERROR_STATUS, SUCCESS_STATUS,
+} from '../constants/constants';
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -18,11 +20,11 @@ export const getUserById = async (req: Request, res: Response) => {
   const id = req.params.userId;
   try {
     if (!id) {
-      return res.status(BAD_REQUEST_STATUS).json({ message: "Неверный запрос" });
+      return res.status(BAD_REQUEST_STATUS).json({ message: 'Неверный запрос' });
     }
     const user = await User.findById(id);
     if (!user) {
-      return res.status(NOT_FOUND).send("Пользователь не найден");
+      return res.status(NOT_FOUND).send('Пользователь не найден');
     }
     res.status(SUCCESS_STATUS).json({ data: user });
   } catch (error) {
@@ -36,7 +38,7 @@ export const createUsers = async (req: Request, res: Response) => {
   const { name, about, avatar } = req.body;
   try {
     if (!name || !about || !avatar) {
-      return res.status(BAD_REQUEST_STATUS).json({ message: "Не все поля заполнены" });
+      return res.status(BAD_REQUEST_STATUS).json({ message: 'Не все поля заполнены' });
     }
     const user = await User.create({
       name,
@@ -57,7 +59,7 @@ export const patchUserData = async (req: Request, res: Response) => {
 
   if (!name || !about) {
     return res.status(BAD_REQUEST_STATUS).json({
-      message: "Необходимо указать имя и/или информацию о пользователе",
+      message: 'Необходимо указать имя и/или информацию о пользователе',
     });
   }
 
@@ -65,11 +67,11 @@ export const patchUserData = async (req: Request, res: Response) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { name, about },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedUser) {
-      return res.status(NOT_FOUND).json({ message: "Не удалось найти пользователя" });
+      return res.status(NOT_FOUND).json({ message: 'Не удалось найти пользователя' });
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedUser });
@@ -87,18 +89,18 @@ export const patchUserAvatar = async (req: Request, res: Response) => {
   if (!avatar && !avatar.match(/^(https?:\/\/.*\.(?:png|jpg|jpeg))$/i)) {
     return res
       .status(BAD_REQUEST_STATUS)
-      .json({ message: "Необходимо указать корректную ссылку на аватар" });
+      .json({ message: 'Необходимо указать корректную ссылку на аватар' });
   }
 
   try {
     const updatedAvatar = await User.findByIdAndUpdate(
       userId,
       { avatar },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     );
 
     if (!updatedAvatar) {
-      return res.status(NOT_FOUND).json({ message: "Не удалось найти пользователя" });
+      return res.status(NOT_FOUND).json({ message: 'Не удалось найти пользователя' });
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedAvatar });
