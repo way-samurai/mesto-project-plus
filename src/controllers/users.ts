@@ -8,7 +8,7 @@ export const getUsers = async (req: Request, res: Response) => {
     res.status(200).json({ data: users });
   } catch (error) {
     res.status(500).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`
+      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
 };
@@ -26,7 +26,7 @@ export const getUserById = async (req: Request, res: Response) => {
     res.status(200).json({ data: user });
   } catch (error) {
     res.status(500).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`
+      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
 };
@@ -74,7 +74,7 @@ export const patchUserData = async (req: Request, res: Response) => {
     res.status(200).json({ data: updatedUser });
   } catch (error) {
     res.status(500).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`
+      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
 };
@@ -103,7 +103,7 @@ export const patchUserAvatar = async (req: Request, res: Response) => {
     res.status(200).json({ data: updatedAvatar });
   } catch (error) {
     res.status(500).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`
+      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
 };
