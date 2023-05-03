@@ -1,7 +1,5 @@
 import mongoose, { Schema } from "mongoose";
 
-const ObjectId = Schema.Types.ObjectId;
-
 const cardSchema = new Schema({
   name: {
     // у пользователя есть имя — опишем требования к имени в схеме:
