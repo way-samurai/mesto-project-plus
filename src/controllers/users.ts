@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/user";
-import { IAppRequest } from "utils/types";
+import { IAppRequest } from "../utils/types";
+import mongoose from "mongoose";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
@@ -15,10 +16,10 @@ export const getUsers = async (req: Request, res: Response) => {
 export const getUserById = async (req: Request, res: Response) => {
   const id = req.params.userId;
   try {
-    if (!id || isNaN(Number(id))) {
+    if (!id) {
       return res.status(400).json({ message: "Неверный запрос" });
     }
-    const user = await User.findById(id);
+    const user = await User.findById(id );
     if (!user) {
       return res.status(404).send("Пользователь не найден");
     }

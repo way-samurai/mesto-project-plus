@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Card from "../models/card";
-import { IAppRequest } from "utils/types";
+import { IAppRequest } from "../utils/types";
 
 export const getCards = async (req: Request, res: Response) => {
   try {
