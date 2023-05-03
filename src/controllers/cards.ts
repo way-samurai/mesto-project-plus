@@ -25,12 +25,6 @@ export const createCard = async (req: Request, res: Response) => {
   const owner = (req as IAppRequest).user!._id;
 
   try {
-    if (!name || !link) {
-      return res
-        .status(BAD_REQUEST_STATUS)
-        .json({ message: 'Не все поля заполнены' });
-    }
-
     const card = await Card.create({
       name,
       link,

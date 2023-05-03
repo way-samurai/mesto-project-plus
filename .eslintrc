@@ -49,7 +49,6 @@
     ],
     "class-methods-use-this": ["off"],
     "consistent-return": ["off"],
-    "import/prefer-default-export": ["off"],
-    "no-console": ["warn", { "allow": ["warn", "log", "error"] }]
+    "import/prefer-default-export": ["off"]
   }
 }
