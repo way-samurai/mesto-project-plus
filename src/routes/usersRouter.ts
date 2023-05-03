@@ -4,7 +4,7 @@ import { Router } from 'express';
 const usersRouter = Router();
 
 usersRouter.get('/', getUsers);
-usersRouter.get('userId', getUserById);
+usersRouter.get('/:userId', getUserById);
 usersRouter.post('/', createUsers);
 
 export default usersRouter;
