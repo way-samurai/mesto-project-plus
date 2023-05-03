@@ -6,6 +6,7 @@ export const getUsers = async (req: Request, res: Response) => {
     const users = await User.find({});
     res.status(200).json({ data: users });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Произошла ошибка на сервере" });
   }
 };
@@ -22,6 +23,7 @@ export const getUserById = async (req: Request, res: Response) => {
     }
     res.status(200).json({ data: user });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Произошла ошибка на сервере" });
   }
 };
@@ -37,8 +39,9 @@ export const createUsers = async (req: Request, res: Response) => {
       about: about,
       avatar: avatar,
     });
-    res.status(201).send(user);
+    res.status(201).json(user);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Произошла ошибка на сервере" });
   }
 };

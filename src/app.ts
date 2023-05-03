@@ -17,7 +17,7 @@ const start = async () => {
   try {
     // подключаемся к серверу MongoiDB
     await mongoose.connect(DB_URL);
-
+    
     app.listen(PORT);
     console.log("Сервер запущен", PORT);
   } catch (err) {
