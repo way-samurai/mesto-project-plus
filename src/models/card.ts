@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const cardSchema = new Schema(
   {
@@ -16,10 +16,10 @@ const cardSchema = new Schema(
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "user",
+      ref: 'user',
     },
     likes: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
       default: [],
     },
     createdAt: {
@@ -27,8 +27,8 @@ const cardSchema = new Schema(
       default: Date.now,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 // создаём модель и экспортируем её
-export default mongoose.model("card", cardSchema);
+export default mongoose.model('card', cardSchema);

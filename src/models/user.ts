@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema } from 'mongoose';
 
 const userSchema = new Schema(
   {
@@ -20,8 +20,8 @@ const userSchema = new Schema(
       required: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
 // создаём модель и экспортируем её
-export default mongoose.model("user", userSchema);
+export default mongoose.model('user', userSchema);
