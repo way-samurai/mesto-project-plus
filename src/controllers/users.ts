@@ -54,7 +54,9 @@ export const patchUserData = async (req: Request, res: Response) => {
   if (!name || !about) {
     return res
       .status(400)
-      .json({ message: "Необходимо указать `name` и `about`" });
+      .json({
+        message: "Необходимо указать имя и/или информацию о пользователе",
+      });
   }
 
   try {
@@ -63,12 +65,43 @@ export const patchUserData = async (req: Request, res: Response) => {
       { name, about },
       { new: true, runValidators: true }
     );
-    
+
     if (!updatedUser) {
       return res.status(404).json({ message: "Не удалось найти пользователя" });
     }
 
     res.status(200).json({ data: updatedUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Произошла ошибка на сервере" });
+  }
+};
+
+export const patchUserAvatar = async (req: Request, res: Response) => {
+  const { avatar } = req.body;
+  const userId = (req as IAppRequest).user!._id;
+
+  if (
+    !avatar &&
+    !avatar.match(/^https?:\/\/[\w\-]+\.[\w\-]+[\w\-\.\/]*\?.*$/)
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Необходимо указать корректную ссылку на аватар" });
+  }
+
+  try {
+    const updatedAvatar = await User.findByIdAndUpdate(
+      userId,
+      { avatar },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedAvatar) {
+      return res.status(404).json({ message: "Не удалось найти пользователя" });
+    }
+
+    res.status(200).json({ data: updatedAvatar });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Произошла ошибка на сервере" });
