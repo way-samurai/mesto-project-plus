@@ -10,8 +10,7 @@ export const getCards = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({
-        message: 'Произошла ошибка на сервере',
-        error: (error as Error).message,
+        message: `Произошла ошибка на сервере - ${(error as Error).message}`
       });
   }
 };
@@ -36,8 +35,7 @@ export const createCard = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({
-        message: 'Произошла ошибка на сервере',
-        error: (error as Error).message,
+        message: `Произошла ошибка на сервере - ${(error as Error).message}`
       });
   }
 };
@@ -55,8 +53,7 @@ export const deleteCard = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({
-        message: 'Произошла ошибка на сервере',
-        error: (error as Error).message,
+        message: `Произошла ошибка на сервере - ${(error as Error).message}`
       });
   }
 };
@@ -79,8 +76,7 @@ export const likeCardHandler = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({
-        message: 'Произошла ошибка на сервере',
-        error: (error as Error).message,
+        message: `Произошла ошибка на сервере - ${(error as Error).message}`
       });
   }
 };
@@ -103,8 +99,7 @@ export const deleteLikeCardHandler = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({
-        message: 'Произошла ошибка на сервере',
-        error: (error as Error).message,
+        message: `Произошла ошибка на сервере - ${(error as Error).message}`
       });
   }
 };
