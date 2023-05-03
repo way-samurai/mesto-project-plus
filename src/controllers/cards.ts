@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import Card from "../models/card";
 import { IAppRequest } from "../utils/types";
+import { BAD_REQUEST_STATUS, CREATED_STATUS, NOT_FOUND, SERVER_ERROR_STATUS, SUCCESS_STATUS } from "constants/constants";
 
 export const getCards = async (req: Request, res: Response) => {
   try {
     const cards = await Card.find({});
-    res.status(200).json({ data: cards });
+    res.status(SUCCESS_STATUS).json({ data: cards });
   } catch (error) {
-    res.status(500).json({
+    res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
@@ -19,7 +20,7 @@ export const createCard = async (req: Request, res: Response) => {
 
   try {
     if (!name || !link) {
-      return res.status(400).json({ message: "Не все поля заполнены" });
+      return res.status(BAD_REQUEST_STATUS).json({ message: "Не все поля заполнены" });
     }
 
     const card = await Card.create({
@@ -28,9 +29,9 @@ export const createCard = async (req: Request, res: Response) => {
       owner,
     });
 
-    res.status(201).json(card);
+    res.status(CREATED_STATUS).json(card);
   } catch (error) {
-    res.status(500).json({
+    res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
@@ -41,12 +42,12 @@ export const deleteCard = async (req: Request, res: Response) => {
   try {
     const card = await Card.findByIdAndRemove(cardId);
     if (!card) {
-      return res.status(400).json({ message: "Не удалось найти карточку" });
+      return res.status(BAD_REQUEST_STATUS).json({ message: "Не удалось найти карточку" });
     }
 
-    res.status(200).json({ data: card });
+    res.status(SUCCESS_STATUS ).json({ data: card });
   } catch (error) {
-    res.status(500).json({
+    res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
@@ -62,12 +63,12 @@ export const likeCardHandler = async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedCard) {
-      return res.status(404).json({ message: "Не удалось найти карточку" });
+      return res.status(NOT_FOUND).json({ message: "Не удалось найти карточку" });
     }
 
-    res.status(200).json({ data: updatedCard });
+    res.status(SUCCESS_STATUS).json({ data: updatedCard });
   } catch (error) {
-    res.status(500).json({
+    res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
@@ -83,12 +84,12 @@ export const deleteLikeCardHandler = async (req: Request, res: Response) => {
       { new: true }
     );
     if (!updatedCard) {
-      return res.status(404).json({ message: "Не удалось найти карточку" });
+      return res.status(NOT_FOUND).json({ message: "Не удалось найти карточку" });
     }
 
-    res.status(200).json({ data: updatedCard });
+    res.status(SUCCESS_STATUS ).json({ data: updatedCard });
   } catch (error) {
-    res.status(500).json({
+    res.status(SERVER_ERROR_STATUS).json({
       message: `Произошла ошибка на сервере - ${(error as Error).message}`,
     });
   }
