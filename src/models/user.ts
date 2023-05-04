@@ -1,11 +1,11 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
+import { IUser, IUserModel } from 'utils/types';
 
-const userSchema = new Schema(
+const userSchema = new Schema<IUser>(
   {
     name: {
-      // у пользователя есть имя — опишем требования к имени в схеме:
-      type: String, // имя — это строка
-      required: true, // имя — обязательное поле
+      type: String,
+      required: true,
       minlength: 2,
       maxlength: 30,
     },
@@ -22,6 +22,34 @@ const userSchema = new Schema(
   },
   { versionKey: false },
 );
+userSchema.static(
+  'updateUserData',
+  async function updateUserData(
+    userId: string,
+    userData: Record<string, IUser>,
+  ) {
+    try {
+      const updatedUser: Document = await this.findByIdAndUpdate(
+        userId,
+        userData,
+        {
+          new: true,
+          runValidators: true,
+        },
+      );
+
+      if (!updatedUser) {
+        throw new Error('Не удалось найти пользователя');
+      }
+
+      return updatedUser;
+    } catch (error) {
+      throw new Error(
+        `Произошла ошибка на сервере - ${(error as Error).message}`,
+      );
+    }
+  },
+);
 
 // создаём модель и экспортируем её
-export default mongoose.model('user', userSchema);
+export default mongoose.model<IUser, IUserModel>('user', userSchema);

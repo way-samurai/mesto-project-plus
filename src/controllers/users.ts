@@ -2,7 +2,10 @@ import { Request, Response } from 'express';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
-  CREATED_STATUS, NOT_FOUND, SERVER_ERROR_STATUS, SUCCESS_STATUS,
+  CREATED_STATUS,
+  NOT_FOUND,
+  SERVER_ERROR_STATUS,
+  SUCCESS_STATUS,
 } from '../constants/constants';
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -52,14 +55,12 @@ export const patchUserData = async (req: Request, res: Response) => {
   const userId = (req as IAppRequest).user!._id;
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { name, about },
-      { new: true, runValidators: true },
-    );
+    const updatedUser = await User.updateUserData(userId, { name, about });
 
     if (!updatedUser) {
-      return res.status(NOT_FOUND).json({ message: 'Не удалось найти пользователя' });
+      return res
+        .status(NOT_FOUND)
+        .json({ message: 'Не удалось найти пользователя' });
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedUser });
@@ -82,7 +83,9 @@ export const patchUserAvatar = async (req: Request, res: Response) => {
     );
 
     if (!updatedAvatar) {
-      return res.status(NOT_FOUND).json({ message: 'Не удалось найти пользователя' });
+      return res
+        .status(NOT_FOUND)
+        .json({ message: 'Не удалось найти пользователя' });
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedAvatar });
