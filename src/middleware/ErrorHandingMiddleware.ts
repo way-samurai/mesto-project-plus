@@ -10,5 +10,5 @@ export default function errorHandler(
 ) {
   const { statusCode = 500, message = SERVER_ERROR_MESSAGE } = err;
   res.status(statusCode).send({ message });
-  return next();
+  next();
 }

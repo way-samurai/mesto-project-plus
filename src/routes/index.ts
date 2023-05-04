@@ -7,7 +7,7 @@ const router = Router();
 
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
-router.use((req: Request, res: Response) => {
+router.use((_req: Request, res: Response) => {
   res.status(NOT_FOUND_STATUS).send('Страница не найдена');
 });
 
