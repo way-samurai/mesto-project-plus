@@ -1,40 +1,52 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
   CREATED_STATUS,
-  NOT_FOUND,
-  SERVER_ERROR_STATUS,
+  NOT_FOUND_USER_MESSAGE,
+  SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
+import { NotFoundErr, ServerErr } from '../errors';
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const users = await User.find({});
+    if (!users) {
+      throw new ServerErr(SERVER_ERROR_MESSAGE);
+    }
     res.status(SUCCESS_STATUS).json({ data: users });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const id = req.params.userId;
   try {
     const user = await User.findById(id);
     if (!user) {
-      return res.status(NOT_FOUND).send('Пользователь не найден');
+      throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
     }
     res.status(SUCCESS_STATUS).json({ data: user });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const createUsers = async (req: Request, res: Response) => {
+export const createUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { name, about, avatar } = req.body;
   try {
     const user = await User.create({
@@ -44,13 +56,16 @@ export const createUsers = async (req: Request, res: Response) => {
     });
     res.status(CREATED_STATUS).json(user);
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    const customError = new ServerErr(SERVER_ERROR_MESSAGE);
+    next(customError);
   }
 };
 
-export const patchUserData = async (req: Request, res: Response) => {
+export const patchUserData = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { name, about } = req.body;
   const userId = (req as IAppRequest).user!._id;
 
@@ -58,20 +73,20 @@ export const patchUserData = async (req: Request, res: Response) => {
     const updatedUser = await User.updateUserData(userId, { name, about });
 
     if (!updatedUser) {
-      return res
-        .status(NOT_FOUND)
-        .json({ message: 'Не удалось найти пользователя' });
+      throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedUser });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const patchUserAvatar = async (req: Request, res: Response) => {
+export const patchUserAvatar = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { avatar } = req.body;
   const userId = (req as IAppRequest).user!._id;
 
@@ -83,15 +98,11 @@ export const patchUserAvatar = async (req: Request, res: Response) => {
     );
 
     if (!updatedAvatar) {
-      return res
-        .status(NOT_FOUND)
-        .json({ message: 'Не удалось найти пользователя' });
+      throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedAvatar });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };

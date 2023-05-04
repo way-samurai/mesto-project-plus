@@ -1,26 +1,34 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import Card from '../models/card';
 import { IAppRequest } from '../utils/types';
 import {
-  BAD_REQUEST_STATUS,
   CREATED_STATUS,
-  NOT_FOUND,
-  SERVER_ERROR_STATUS,
+  SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
+import { ServerErr } from '../errors';
 
-export const getCards = async (req: Request, res: Response) => {
+export const getCards = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
+    if (!cards) {
+      throw new ServerErr(SERVER_ERROR_MESSAGE);
+    }
     res.status(SUCCESS_STATUS).json({ data: cards });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const createCard = async (req: Request, res: Response) => {
+export const createCard = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { name, link } = req.body;
   const owner = (req as IAppRequest).user!._id;
 
@@ -35,13 +43,16 @@ export const createCard = async (req: Request, res: Response) => {
 
     res.status(CREATED_STATUS).json(card);
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    const customError = new ServerErr(SERVER_ERROR_MESSAGE);
+    next(customError);
   }
 };
 
-export const deleteCard = async (req: Request, res: Response) => {
+export const deleteCard = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { cardId } = req.params;
   try {
     const card = await Card.findByIdAndRemove(cardId).populate([
@@ -49,20 +60,20 @@ export const deleteCard = async (req: Request, res: Response) => {
       'likes',
     ]);
     if (!card) {
-      return res
-        .status(BAD_REQUEST_STATUS)
-        .json({ message: 'Не удалось найти карточку' });
+      throw new ServerErr(SERVER_ERROR_MESSAGE);
     }
 
     res.status(SUCCESS_STATUS).json({ data: card });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const likeCardHandler = async (req: Request, res: Response) => {
+export const likeCardHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { cardId } = req.params;
   const userId = (req as IAppRequest).user!._id;
   try {
@@ -72,20 +83,20 @@ export const likeCardHandler = async (req: Request, res: Response) => {
       { new: true },
     ).populate(['owner', 'likes']);
     if (!updatedCard) {
-      return res
-        .status(NOT_FOUND)
-        .json({ message: 'Не удалось найти карточку' });
+      throw new ServerErr(SERVER_ERROR_MESSAGE);
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedCard });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };
 
-export const deleteLikeCardHandler = async (req: Request, res: Response) => {
+export const deleteLikeCardHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   const { cardId } = req.params;
   const userId = (req as IAppRequest).user!._id;
   try {
@@ -95,15 +106,11 @@ export const deleteLikeCardHandler = async (req: Request, res: Response) => {
       { new: true },
     ).populate(['owner', 'likes']);
     if (!updatedCard) {
-      return res
-        .status(NOT_FOUND)
-        .json({ message: 'Не удалось найти карточку' });
+      throw new ServerErr(SERVER_ERROR_MESSAGE);
     }
 
     res.status(SUCCESS_STATUS).json({ data: updatedCard });
   } catch (error) {
-    res.status(SERVER_ERROR_STATUS).json({
-      message: `Произошла ошибка на сервере - ${(error as Error).message}`,
-    });
+    next(error);
   }
 };

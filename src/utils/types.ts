@@ -35,3 +35,7 @@ export interface IUserModel extends Model<IUser> {
     userData: TUpdateUserData
   ) => Promise<Document<unknown, any, IUser>>;
 }
+
+export interface ICustomError extends Error {
+  statusCode: number;
+}
