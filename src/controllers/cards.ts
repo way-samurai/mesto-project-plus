@@ -11,7 +11,7 @@ import {
 
 export const getCards = async (req: Request, res: Response) => {
   try {
-    const cards = await Card.find({});
+    const cards = await Card.find({}).populate(['owner', 'likes']);
     res.status(SUCCESS_STATUS).json({ data: cards });
   } catch (error) {
     res.status(SERVER_ERROR_STATUS).json({
@@ -31,6 +31,8 @@ export const createCard = async (req: Request, res: Response) => {
       owner,
     });
 
+    await card.populate('owner');
+
     res.status(CREATED_STATUS).json(card);
   } catch (error) {
     res.status(SERVER_ERROR_STATUS).json({
@@ -42,7 +44,10 @@ export const createCard = async (req: Request, res: Response) => {
 export const deleteCard = async (req: Request, res: Response) => {
   const { cardId } = req.params;
   try {
-    const card = await Card.findByIdAndRemove(cardId);
+    const card = await Card.findByIdAndRemove(cardId).populate([
+      'owner',
+      'likes',
+    ]);
     if (!card) {
       return res
         .status(BAD_REQUEST_STATUS)
@@ -65,7 +70,7 @@ export const likeCardHandler = async (req: Request, res: Response) => {
       cardId,
       { $addToSet: { likes: userId } },
       { new: true },
-    );
+    ).populate(['owner', 'likes']);
     if (!updatedCard) {
       return res
         .status(NOT_FOUND)
@@ -88,7 +93,7 @@ export const deleteLikeCardHandler = async (req: Request, res: Response) => {
       cardId,
       { $pull: { likes: userId } },
       { new: true },
-    );
+    ).populate(['owner', 'likes']);
     if (!updatedCard) {
       return res
         .status(NOT_FOUND)
