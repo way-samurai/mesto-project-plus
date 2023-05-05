@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express';
 import cardsRouter from './cardsRouter';
 import usersRouter from './usersRouter';
-import { NOT_FOUND_STATUS } from '../constants/constants';
+import { NOT_FOUND_STATUS } from '../constants/errors-constants';
 
 const router = Router();
 

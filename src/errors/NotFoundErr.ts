@@ -1,4 +1,4 @@
-import { NOT_FOUND_STATUS } from '../constants/constants';
+import { NOT_FOUND_STATUS } from '../constants/errors-constants';
 
 class NotFoundErr extends Error {
   statusCode: number;

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { SERVER_ERROR_MESSAGE } from '../constants/constants';
+import { SERVER_ERROR_MESSAGE } from '../constants/errors-constants';
 import { ICustomError } from '../utils/types';
 
 export default function errorHandler(

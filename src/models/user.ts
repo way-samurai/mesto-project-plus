@@ -2,7 +2,12 @@ import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import { IUser, IUserModel } from '../utils/types';
 import { urlRegex } from '../utils/validation';
-import { INVALID_DATA } from '../constants/constants';
+import { INVALID_DATA } from '../constants/errors-constants';
+import {
+  USER_ABOUT_DEFAULT,
+  USER_AVATAR_DEFAULT,
+  USER_NAME_DEFAULT,
+} from '../constants/userDataDefault';
 
 const userSchema = new Schema<IUser>(
   {
@@ -18,22 +23,23 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     name: {
       type: String,
-      required: true,
       minlength: 2,
       maxlength: 30,
+      default: USER_NAME_DEFAULT,
     },
     about: {
       type: String,
-      required: true,
       minlength: 2,
       maxlength: 30,
+      default: USER_ABOUT_DEFAULT,
     },
     avatar: {
       type: String,
-      required: true,
+      default: USER_AVATAR_DEFAULT,
       validate: {
         validator(link: string) {
           return urlRegex.test(link);

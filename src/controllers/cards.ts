@@ -8,7 +8,7 @@ import {
   NOT_FOUND_CARD_MESSAGE,
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
-} from '../constants/constants';
+} from '../constants/errors-constants';
 import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
 
 export const getCards = async (

@@ -7,7 +7,7 @@ import {
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
-} from '../constants/constants';
+} from '../constants/errors-constants';
 import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
 
 export const getUsers = async (
@@ -52,8 +52,16 @@ export const createUsers = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { name, about, avatar } = req.body;
+  const {
+    email,
+    password,
+    name,
+    about,
+    avatar,
+  } = req.body;
   await User.create({
+    email,
+    password,
     name,
     about,
     avatar,
