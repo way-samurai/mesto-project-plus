@@ -1,14 +1,49 @@
 import { NextFunction, Request, Response } from 'express';
+import UnauthErr from 'errors/Unautorized';
+import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
   CREATED_STATUS,
+  INVALID_AUTH_DATA,
   INVALID_DATA,
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/errors-constants';
 import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { email, password } = req.body;
+  await User.findUserByCredentials(email, password)
+    .then((user) => {
+      const { _id } = user;
+      const token = jwt.sign({ _id }, 'dev-super-secret', { expiresIn: '7d' });
+
+      if (!user) {
+        throw new NotFoundErr(INVALID_AUTH_DATA);
+      }
+      res
+        .cookie('jwt', token, {
+          httpOnly: true,
+          sameSite: true,
+          maxAge: 3600000 * 24,
+        })
+        .status(SUCCESS_STATUS)
+        .send({ token });
+    })
+    .catch((err) => {
+      let customError = err;
+      if (err.name === ('ValidationError' || 'CastError')) {
+        customError = new UnauthErr(INVALID_AUTH_DATA);
+      }
+      next(customError);
+    });
+};
 
 export const getUsers = async (
   _req: Request,
@@ -53,11 +88,7 @@ export const createUsers = async (
   next: NextFunction,
 ) => {
   const {
-    email,
-    password,
-    name,
-    about,
-    avatar,
+    email, password, name, about, avatar,
   } = req.body;
   await User.create({
     email,

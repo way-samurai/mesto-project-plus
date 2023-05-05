@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Request } from 'express';
-import { Model, Document } from 'mongoose';
+import { Model, Document, ObjectId } from 'mongoose';
 
 export interface IAppRequest extends Request {
   user?: {
@@ -9,17 +9,12 @@ export interface IAppRequest extends Request {
 }
 
 export interface IUser {
-  email: string,
-  password: string,
+  _id: ObjectId;
+  email: string;
+  password: string;
   name: string;
   about: string;
   avatar: string;
-}
-
-export interface IUpdateUserData {
-  name?: string;
-  about?: string;
-  avatar?: string;
 }
 
 type TUpdateUserData =
@@ -35,7 +30,11 @@ export interface IUserModel extends Model<IUser> {
   updateUserData: (
     userId: string,
     userData: TUpdateUserData,
-    options: {new: boolean, runValidators: true}
+    options: { new: boolean; runValidators: true }
+  ) => Promise<Document<unknown, any, IUser>>;
+  findUserByCredentials: (
+    email: string,
+    password: string
   ) => Promise<Document<unknown, any, IUser>>;
 }
 
