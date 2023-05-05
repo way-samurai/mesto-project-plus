@@ -70,7 +70,11 @@ export const patchUserData = async (
   const userId = (req as IAppRequest).user!._id;
 
   try {
-    const updatedUser = await User.updateUserData(userId, { name, about });
+    const updatedUser = await User.updateUserData(
+      userId,
+      { name, about },
+      { new: true, runValidators: true },
+    );
 
     if (!updatedUser) {
       throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);

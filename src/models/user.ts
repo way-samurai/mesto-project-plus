@@ -25,17 +25,15 @@ const userSchema = new Schema<IUser>(
 userSchema.static(
   'updateUserData',
   async function updateUserData(
-    userId: string,
-    userData: Record<string, IUser>,
+    userId,
+    userData,
+    options,
   ) {
     try {
       const updatedUser: Document = await this.findByIdAndUpdate(
         userId,
         userData,
-        {
-          new: true,
-          runValidators: true,
-        },
+        options,
       );
 
       if (!updatedUser) {

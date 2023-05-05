@@ -32,7 +32,8 @@ type TUpdateUserData =
 export interface IUserModel extends Model<IUser> {
   updateUserData: (
     userId: string,
-    userData: TUpdateUserData
+    userData: TUpdateUserData,
+    options: {new: boolean, runValidators: true}
   ) => Promise<Document<unknown, any, IUser>>;
 }
 
