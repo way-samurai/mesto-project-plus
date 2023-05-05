@@ -40,8 +40,9 @@ export const createCard = async (
     link,
     owner,
   })
-    .then((card) => {
-      res.status(CREATED_STATUS).json(card.populate('owner'));
+    .then(async (card) => {
+      await card.populate('owner');
+      res.status(CREATED_STATUS).json(card);
     })
     .catch((err) => {
       let customError = err;
