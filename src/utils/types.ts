@@ -1,11 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { Request } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 import { Model, Document, ObjectId } from 'mongoose';
 
 export interface IAppRequest extends Request {
   user?: {
     _id: string;
   };
+}
+
+export interface SessionRequest extends Request {
+  user?: string | JwtPayload;
 }
 
 export interface IUser {
