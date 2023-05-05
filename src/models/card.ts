@@ -1,12 +1,12 @@
 import mongoose, { Schema } from 'mongoose';
 import { urlRegex } from '../utils/validation';
+import { INVALID_LINK } from '../constants/constants';
 
 const cardSchema = new Schema(
   {
     name: {
-      // у пользователя есть имя — опишем требования к имени в схеме:
-      type: String, // имя — это строка
-      required: true, // имя — обязательное поле
+      type: String,
+      required: true,
       minlength: 2,
       maxlength: 30,
     },
@@ -17,6 +17,7 @@ const cardSchema = new Schema(
         validator(link: string) {
           return urlRegex.test(link);
         },
+        message: INVALID_LINK,
       },
     },
     owner: {

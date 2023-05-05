@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import { IUser, IUserModel } from '../utils/types';
 import { urlRegex } from '../utils/validation';
+import { INVALID_LINK } from '../constants/constants';
 
 const userSchema = new Schema<IUser>(
   {
@@ -23,6 +24,7 @@ const userSchema = new Schema<IUser>(
         validator(link: string) {
           return urlRegex.test(link);
         },
+        message: INVALID_LINK,
       },
     },
   },
