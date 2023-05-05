@@ -9,6 +9,9 @@ const NOT_FOUND_USER_MESSAGE = 'Пользователь не найден';
 const NOT_FOUND_USERS_MESSAGE = 'Пользователи не найдены';
 const NOT_FOUND_CARDS_MESSAGE = 'Карточки не найдены';
 
+const INVALID_LINK = 'Передана невалидная ссылка';
+const INVALID_DATA = 'Переданы невалидные данные';
+
 export {
   SUCCESS_STATUS,
   CREATED_STATUS,
@@ -19,4 +22,6 @@ export {
   NOT_FOUND_USER_MESSAGE,
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_CARDS_MESSAGE,
+  INVALID_LINK,
+  INVALID_DATA,
 };
