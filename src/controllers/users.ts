@@ -3,6 +3,7 @@ import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
   CREATED_STATUS,
+  NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
@@ -16,8 +17,8 @@ export const getUsers = async (
 ) => {
   try {
     const users = await User.find({});
-    if (!users) {
-      throw new ServerErr(SERVER_ERROR_MESSAGE);
+    if (!users.length) {
+      throw new ServerErr(NOT_FOUND_USERS_MESSAGE);
     }
     res.status(SUCCESS_STATUS).json({ data: users });
   } catch (error) {
@@ -95,7 +96,7 @@ export const patchUserAvatar = async (
   const userId = (req as IAppRequest).user!._id;
 
   try {
-    const updatedAvatar = await User.findByIdAndUpdate(
+    const updatedAvatar = await User.updateUserData(
       userId,
       { avatar },
       { new: true, runValidators: true },

@@ -3,7 +3,7 @@ import { IAppRequest } from './types';
 
 export const testUserId = (req: Request, res: Response, next: NextFunction) => {
   (req as IAppRequest).user = {
-    _id: '6452882d0d0132e0784ee186',
+    _id: '64551df1692632d7ebb161cb',
   };
   next();
 };

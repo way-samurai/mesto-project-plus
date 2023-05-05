@@ -6,6 +6,8 @@ const SERVER_ERROR_STATUS = 500;
 
 const SERVER_ERROR_MESSAGE = 'Произошла ошибка на сервере';
 const NOT_FOUND_USER_MESSAGE = 'Пользователь не найден';
+const NOT_FOUND_USERS_MESSAGE = 'Пользователи не найдены';
+const NOT_FOUND_CARDS_MESSAGE = 'Карточки не найдены';
 
 export {
   SUCCESS_STATUS,
@@ -15,4 +17,6 @@ export {
   SERVER_ERROR_STATUS,
   SERVER_ERROR_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
+  NOT_FOUND_USERS_MESSAGE,
+  NOT_FOUND_CARDS_MESSAGE,
 };

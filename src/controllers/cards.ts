@@ -3,6 +3,7 @@ import Card from '../models/card';
 import { IAppRequest } from '../utils/types';
 import {
   CREATED_STATUS,
+  NOT_FOUND_CARDS_MESSAGE,
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
@@ -15,8 +16,8 @@ export const getCards = async (
 ) => {
   try {
     const cards = await Card.find({}).populate(['owner', 'likes']);
-    if (!cards) {
-      throw new ServerErr(SERVER_ERROR_MESSAGE);
+    if (!cards.length) {
+      throw new ServerErr(NOT_FOUND_CARDS_MESSAGE);
     }
     res.status(SUCCESS_STATUS).json({ data: cards });
   } catch (error) {
