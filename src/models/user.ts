@@ -1,5 +1,6 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IUser, IUserModel } from 'utils/types';
+import { IUser, IUserModel } from '../utils/types';
+import { urlRegex } from '../utils/validation';
 
 const userSchema = new Schema<IUser>(
   {
@@ -18,6 +19,11 @@ const userSchema = new Schema<IUser>(
     avatar: {
       type: String,
       required: true,
+      validate: {
+        validator(link: string) {
+          return urlRegex.test(link);
+        },
+      },
     },
   },
   { versionKey: false },
