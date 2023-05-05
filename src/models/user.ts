@@ -1,7 +1,7 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUser, IUserModel } from '../utils/types';
 import { urlRegex } from '../utils/validation';
-import { INVALID_LINK } from '../constants/constants';
+import { INVALID_DATA } from '../constants/constants';
 
 const userSchema = new Schema<IUser>(
   {
@@ -24,7 +24,7 @@ const userSchema = new Schema<IUser>(
         validator(link: string) {
           return urlRegex.test(link);
         },
-        message: INVALID_LINK,
+        message: INVALID_DATA,
       },
     },
   },
@@ -32,28 +32,8 @@ const userSchema = new Schema<IUser>(
 );
 userSchema.static(
   'updateUserData',
-  async function updateUserData(
-    userId,
-    userData,
-    options,
-  ) {
-    try {
-      const updatedUser: Document = await this.findByIdAndUpdate(
-        userId,
-        userData,
-        options,
-      );
-
-      if (!updatedUser) {
-        throw new Error('Не удалось найти пользователя');
-      }
-
-      return updatedUser;
-    } catch (error) {
-      throw new Error(
-        `Произошла ошибка на сервере - ${(error as Error).message}`,
-      );
-    }
+  function updateUserData(userId, userData, options) {
+    return this.findByIdAndUpdate(userId, userData, options);
   },
 );
 

@@ -82,15 +82,16 @@ export const patchUserData = async (
     { new: true, runValidators: true },
   )
     .then((updatedUser) => {
-      if (!updatedUser) {
-        throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
-      }
       res.status(SUCCESS_STATUS).json({ data: updatedUser });
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'ValidationError') {
+
+      if (customError.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
+      }
+      if (customError.name === 'CastError') {
+        customError = new NotFoundErr(NOT_FOUND_USER_MESSAGE);
       }
       next(customError);
     });
@@ -109,15 +110,15 @@ export const patchUserAvatar = async (
     { new: true, runValidators: true },
   )
     .then((updatedUser) => {
-      if (!updatedUser) {
-        throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
-      }
       res.status(SUCCESS_STATUS).json({ data: updatedUser });
     })
     .catch((err) => {
       let customError = err;
       if (err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
+      }
+      if (customError.name === 'CastError') {
+        customError = new NotFoundErr(NOT_FOUND_USER_MESSAGE);
       }
       next(customError);
     });

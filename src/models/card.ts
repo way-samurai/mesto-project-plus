@@ -1,6 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
 import { urlRegex } from '../utils/validation';
-import { INVALID_LINK } from '../constants/constants';
 
 const cardSchema = new Schema(
   {
@@ -17,7 +16,6 @@ const cardSchema = new Schema(
         validator(link: string) {
           return urlRegex.test(link);
         },
-        message: INVALID_LINK,
       },
     },
     owner: {
