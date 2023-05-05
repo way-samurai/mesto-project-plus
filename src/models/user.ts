@@ -1,10 +1,24 @@
 import mongoose, { Schema } from 'mongoose';
+import validator from 'validator';
 import { IUser, IUserModel } from '../utils/types';
 import { urlRegex } from '../utils/validation';
 import { INVALID_DATA } from '../constants/constants';
 
 const userSchema = new Schema<IUser>(
   {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: (v: string) => validator.isEmail(v),
+        message: 'Неправильный формат почты',
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
