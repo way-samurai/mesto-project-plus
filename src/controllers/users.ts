@@ -82,6 +82,28 @@ export const getUserById = async (
     });
 };
 
+export const getAuthUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const userId = (req as IAppRequest).user!._id;
+  await User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundErr(NOT_FOUND_USER_MESSAGE);
+      }
+      res.status(SUCCESS_STATUS).json({ data: user });
+    })
+    .catch((err) => {
+      let customError = err;
+      if (err.name === 'CastError') {
+        customError = new BadRequestErr(INVALID_DATA);
+      }
+      next(customError);
+    });
+};
+
 export const createUsers = async (
   req: Request,
   res: Response,

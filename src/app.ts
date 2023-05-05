@@ -3,12 +3,15 @@ import mongoose from 'mongoose';
 import router from './routes';
 import { testUserId } from './utils/testUser';
 import errorHandler from './middleware/ErrorHandingMiddleware';
+import { createUsers, login } from './controllers/users';
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
 app.use(express.json());
 app.use(testUserId);
+app.post('/sigin', login);
+app.post('/signup', createUsers);
 app.use(router);
 app.use(errorHandler);
 
