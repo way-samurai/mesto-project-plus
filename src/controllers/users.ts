@@ -7,11 +7,10 @@ import {
   CREATED_STATUS,
   INVALID_AUTH_DATA,
   INVALID_DATA,
-  NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
-import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
+import { BadRequestErr, NotFoundErr } from '../errors';
 
 export const login = async (
   req: Request,
@@ -52,9 +51,6 @@ export const getUsers = async (
 ) => {
   await User.find({})
     .then((users) => {
-      if (!users.length) {
-        throw new ServerErr(NOT_FOUND_USERS_MESSAGE);
-      }
       res.status(SUCCESS_STATUS).json({ data: users });
     })
     .catch(next);
@@ -151,9 +147,6 @@ export const patchUserData = async (
       if (customError.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
-      if (customError.name === 'CastError') {
-        customError = new NotFoundErr(NOT_FOUND_USER_MESSAGE);
-      }
       next(customError);
     });
 };
@@ -177,9 +170,6 @@ export const patchUserAvatar = async (
       let customError = err;
       if (err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
-      }
-      if (customError.name === 'CastError') {
-        customError = new NotFoundErr(NOT_FOUND_USER_MESSAGE);
       }
       next(customError);
     });

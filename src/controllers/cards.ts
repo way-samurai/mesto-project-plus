@@ -7,7 +7,6 @@ import {
   DELETE_CARD_SUCCES,
   FORBIDDEN_MESSAGE,
   INVALID_DATA,
-  NOT_FOUND_CARDS_MESSAGE,
   NOT_FOUND_CARD_MESSAGE,
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
@@ -22,9 +21,6 @@ export const getCards = async (
   await Card.find({})
     .populate(['owner', 'likes'])
     .then((cards) => {
-      if (!cards.length) {
-        throw new ServerErr(NOT_FOUND_CARDS_MESSAGE);
-      }
       res.status(SUCCESS_STATUS).json({ data: cards });
     })
     .catch(next);
@@ -91,7 +87,7 @@ export const likeCardHandler = async (
 ) => {
   const { cardId } = req.params;
   const userId = (req as IAppRequest).user!._id;
-  await Card.findByIdAndUpdate(
+  Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: userId } },
     { new: true },
