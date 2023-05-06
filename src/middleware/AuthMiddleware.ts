@@ -1,7 +1,7 @@
 import { NEED_AUTH } from 'constants/constants';
-import UnauthErr from 'errors/Unautorized';
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import UnauthErr from '../errors/Unautorized';
 import { SessionRequest } from '../utils/types';
 
 const extractBearerToken = (header: string) => header.replace('Bearer ', '');

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import ForbiddenErr from 'errors/ForbiddenError';
 import Card from '../models/card';
 import { IAppRequest } from '../utils/types';
 import {
@@ -11,7 +10,9 @@ import {
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
-import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
+import {
+  BadRequestErr, NotFoundErr, ServerErr, ForbiddenErr,
+} from '../errors';
 
 export const getCards = async (
   _req: Request,

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import UnauthErr from 'errors/Unautorized';
 import jwt from 'jsonwebtoken';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
@@ -10,7 +9,7 @@ import {
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
-import { BadRequestErr, NotFoundErr } from '../errors';
+import { BadRequestErr, NotFoundErr, UnauthErr } from '../errors';
 
 export const login = async (
   req: Request,
