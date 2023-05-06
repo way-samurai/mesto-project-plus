@@ -2,7 +2,7 @@ import winston from 'winston';
 import expressWinston from 'express-winston';
 
 export const requestLogger = expressWinston.logger({
-  trensports: [
+  transports: [
     new winston.transports.Console({
       format: winston.format.simple(),
     }),
