@@ -1,4 +1,4 @@
-import { NEED_AUTH } from 'constants/errors-constants';
+import { NEED_AUTH } from 'constants/constants';
 import UnauthErr from 'errors/Unautorized';
 import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';

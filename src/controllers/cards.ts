@@ -1,14 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
+import ForbiddenErr from 'errors/ForbiddenError';
 import Card from '../models/card';
 import { IAppRequest } from '../utils/types';
 import {
   CREATED_STATUS,
+  DELETE_CARD_SUCCES,
+  FORBIDDEN_MESSAGE,
   INVALID_DATA,
   NOT_FOUND_CARDS_MESSAGE,
   NOT_FOUND_CARD_MESSAGE,
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
-} from '../constants/errors-constants';
+} from '../constants/constants';
 import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
 
 export const getCards = async (
@@ -59,13 +62,18 @@ export const deleteCard = async (
   next: NextFunction,
 ) => {
   const { cardId } = req.params;
+  const userId = (req as IAppRequest).user!._id;
+
   await Card.findByIdAndRemove(cardId)
     .populate(['owner', 'likes'])
     .then((card) => {
+      const ownerId = String(card!.owner);
       if (!card) {
         throw new NotFoundErr(SERVER_ERROR_MESSAGE);
+      } else if (userId !== ownerId) {
+        throw new ForbiddenErr(FORBIDDEN_MESSAGE);
       }
-      res.status(SUCCESS_STATUS).json({ data: card });
+      res.status(SUCCESS_STATUS).json({ message: DELETE_CARD_SUCCES });
     })
     .catch((err) => {
       let customError = err;

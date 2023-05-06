@@ -1,4 +1,4 @@
-import { BAD_REQUEST_STATUS } from '../constants/errors-constants';
+import { BAD_REQUEST_STATUS } from '../constants/constants';
 
 class BadRequestErr extends Error {
   statusCode: number;

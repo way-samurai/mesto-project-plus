@@ -1,4 +1,4 @@
-import { UNAUTORIZED } from '../constants/errors-constants';
+import { UNAUTORIZED } from '../constants/constants';
 
 class UnauthErr extends Error {
   statusCode: number;

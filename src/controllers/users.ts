@@ -10,7 +10,7 @@ import {
   NOT_FOUND_USERS_MESSAGE,
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
-} from '../constants/errors-constants';
+} from '../constants/constants';
 import { BadRequestErr, NotFoundErr, ServerErr } from '../errors';
 
 export const login = async (
