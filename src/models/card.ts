@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { urlRegex } from '../utils/validation';
+import { urlRegex } from '../utils/validations';
 
 const cardSchema = new Schema(
   {

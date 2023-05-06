@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import { IUser, IUserModel } from '../utils/types';
-import { urlRegex } from '../utils/validation';
+import { urlRegex } from '../utils/validations';
 import { INVALID_DATA, INVALID_AUTH_DATA } from '../constants/constants';
 import {
   USER_ABOUT_DEFAULT,

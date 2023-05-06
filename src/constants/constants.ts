@@ -13,6 +13,8 @@ const NOT_FOUND_USERS_MESSAGE = 'Пользователи не найдены';
 const NOT_FOUND_CARD_MESSAGE = 'Карточкa не найденa';
 const NOT_FOUND_CARDS_MESSAGE = 'Карточки не найдены';
 const INVALID_DATA = 'Переданы невалидные данные';
+const INVALID_DATA_EMAIL = 'Передан невалидный email';
+const INVALID_DATA_LINK = 'Передана невалидная ссылка';
 const INVALID_AUTH_DATA = 'Неправильные почта или пароль';
 const NEED_AUTH = 'Необходима авторизация';
 const FORBIDDEN_MESSAGE = 'Вы не являетесь владельцем карточки';
@@ -21,6 +23,8 @@ const CONFLICT_EMAIL_UP = 'Пользователь с таким email уже �
 const DELETE_CARD_SUCCES = 'Карточка успешно удалена';
 
 export {
+  INVALID_DATA_LINK,
+  INVALID_DATA_EMAIL,
   CONFLICT_STATUS,
   CONFLICT_EMAIL_UP,
   DELETE_CARD_SUCCES,
