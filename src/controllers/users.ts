@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import ConflictErr from 'errors/ConflictErr';
+import bcrypt from 'bcrypt';
+import ConflictErr from '../errors/ConflictErr';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
@@ -11,18 +12,16 @@ import {
   NOT_FOUND_USER_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
-import { BadRequestErr, NotFoundErr, UnauthErr } from '../errors';
+import { BadRequestErr, NotFoundErr } from '../errors';
 
-export const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const login = (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
-  await User.findUserByCredentials(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const { _id } = user;
-      const token = jwt.sign({ _id }, 'dev-super-secret', { expiresIn: '7d' });
+      const token = jwt.sign({ _id }, 'super-strong-secret', {
+        expiresIn: '7d',
+      });
 
       if (!user) {
         throw new NotFoundErr(INVALID_AUTH_DATA);
@@ -36,13 +35,7 @@ export const login = async (
         .status(SUCCESS_STATUS)
         .send({ token });
     })
-    .catch((err) => {
-      let customError = err;
-      if (err.name === ('ValidationError' || 'CastError')) {
-        customError = new UnauthErr(INVALID_AUTH_DATA);
-      }
-      next(customError);
-    });
+    .catch(next);
 };
 
 export const getUsers = async (
@@ -109,20 +102,22 @@ export const createUsers = async (
   const {
     email, password, name, about, avatar,
   } = req.body;
-  await User.create({
-    email,
-    password,
-    name,
-    about,
-    avatar,
-  })
+  bcrypt
+    .hash(password, 10)
+    .then((hash) => User.create({
+      email,
+      password: hash,
+      name,
+      about,
+      avatar,
+    }))
     .then((user) => res.status(CREATED_STATUS).json(user))
     .catch((err) => {
       let customError = err;
       if (err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
-      if (err.name === ('MongoServerError')) {
+      if (err.name === 'MongoServerError') {
         customError = new ConflictErr(CONFLICT_EMAIL_UP);
       }
       next(customError);

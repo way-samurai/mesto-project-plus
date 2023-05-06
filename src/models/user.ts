@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { IUser, IUserModel } from '../utils/types';
 import { INVALID_AUTH_DATA } from '../constants/constants';
 import {
@@ -54,7 +54,7 @@ userSchema.static(
   function findUserByCredentials(email: string, password: string) {
     return this.findOne({ email })
       .select('+password')
-      .then((user: { password: string }) => {
+      .then((user: IUser) => {
         if (!user) {
           throw new UnauthErr(INVALID_AUTH_DATA);
         }
@@ -63,7 +63,6 @@ userSchema.static(
           if (!matched) {
             throw new UnauthErr(INVALID_AUTH_DATA);
           }
-
           return user;
         });
       });
