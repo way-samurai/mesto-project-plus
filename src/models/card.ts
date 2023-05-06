@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { urlRegex } from '../utils/validations';
 
 const cardSchema = new Schema(
   {
@@ -12,11 +11,6 @@ const cardSchema = new Schema(
     link: {
       type: String,
       required: true,
-      validate: {
-        validator(link: string) {
-          return urlRegex.test(link);
-        },
-      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
