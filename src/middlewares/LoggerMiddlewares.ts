@@ -1,24 +1,29 @@
 import winston from 'winston';
 import expressWinston from 'express-winston';
+import 'winston-daily-rotate-file';
+
+const transportReq = new winston.transports.DailyRotateFile({
+  // указываем формат имени файла
+  filename: 'request-%DATE%.log',
+  // указываем шаблон для даты
+  datePattern: 'YYYY-MM-DD-HH',
+});
+
+const transportErr = new winston.transports.DailyRotateFile({
+  // указываем формат имени файла
+  filename: 'error-%DATE%.log',
+  // указываем шаблон для даты
+  datePattern: 'YYYY-MM-DD-HH',
+});
 
 const requestLogger = expressWinston.logger({
-  transports: [
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    }),
-    new winston.transports.File({
-      filename: 'request.log',
-    }),
-  ],
+  transports: [transportReq],
   format: winston.format.json(),
 });
 
 const errorLogger = expressWinston.errorLogger({
-  transports: [new winston.transports.File({ filename: 'error.log' })],
+  transports: [transportErr],
   format: winston.format.json(),
 });
 
-export {
-  requestLogger,
-  errorLogger,
-};
+export { requestLogger, errorLogger };
