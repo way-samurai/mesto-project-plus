@@ -1,8 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+import ConflictErr from 'errors/ConflictErr';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
+  CONFLICT_EMAIL_UP,
   CREATED_STATUS,
   INVALID_AUTH_DATA,
   INVALID_DATA,
@@ -119,6 +121,9 @@ export const createUsers = async (
       let customError = err;
       if (err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
+      }
+      if (err.name === ('MongoServerError')) {
+        customError = new ConflictErr(CONFLICT_EMAIL_UP);
       }
       next(customError);
     });
