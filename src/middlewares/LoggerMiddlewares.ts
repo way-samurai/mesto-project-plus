@@ -9,6 +9,7 @@ const transportReq = new winston.transports.DailyRotateFile({
   datePattern: 'YYYY-MM-DD-HH',
   maxSize: '20m',
   zippedArchive: true,
+  maxFiles: 14,
 });
 
 const transportErr = new winston.transports.DailyRotateFile({
@@ -18,6 +19,7 @@ const transportErr = new winston.transports.DailyRotateFile({
   datePattern: 'YYYY-MM-DD-HH',
   maxSize: '20m',
   zippedArchive: true,
+  maxFiles: 14,
 });
 
 const requestLogger = expressWinston.logger({
