@@ -10,9 +10,7 @@ import {
   SERVER_ERROR_MESSAGE,
   SUCCESS_STATUS,
 } from '../constants/constants';
-import {
-  BadRequestErr, NotFoundErr, ServerErr, ForbiddenErr,
-} from '../errors';
+import { BadRequestErr, NotFoundErr, ForbiddenErr } from '../errors';
 
 export const getCards = async (
   _req: Request,
@@ -46,7 +44,7 @@ export const createCard = async (
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'ValidationError') {
+      if (customError instanceof Error && err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
       next(customError);
@@ -61,20 +59,24 @@ export const deleteCard = async (
   const { cardId } = req.params;
   const userId = (req as IAppRequest).user!._id;
 
-  await Card.findByIdAndRemove(cardId)
+  await Card.findById(cardId)
     .populate(['owner', 'likes'])
     .then((card) => {
       const ownerId = String(card!.owner);
       if (!card) {
         throw new NotFoundErr(SERVER_ERROR_MESSAGE);
-      } else if (userId !== ownerId) {
+      }
+      if (userId !== ownerId) {
         throw new ForbiddenErr(FORBIDDEN_MESSAGE);
       }
+      return card.remove();
+    })
+    .then(() => {
       res.status(SUCCESS_STATUS).json({ message: DELETE_CARD_SUCCES });
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'CastError') {
+      if (customError instanceof Error && err.name === 'CastError') {
         customError = new BadRequestErr(NOT_FOUND_CARD_MESSAGE);
       }
       next(customError);
@@ -96,13 +98,13 @@ export const likeCardHandler = async (
     .populate(['owner', 'likes'])
     .then((updatedCard) => {
       if (!updatedCard) {
-        throw new ServerErr(SERVER_ERROR_MESSAGE);
+        throw new NotFoundErr(NOT_FOUND_CARD_MESSAGE);
       }
       res.status(SUCCESS_STATUS).json({ data: updatedCard });
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'CastError') {
+      if (customError instanceof Error && err.name === 'CastError') {
         customError = new BadRequestErr(NOT_FOUND_CARD_MESSAGE);
       }
       next(customError);
@@ -124,13 +126,13 @@ export const deleteLikeCardHandler = async (
     .populate(['owner', 'likes'])
     .then((updatedCard) => {
       if (!updatedCard) {
-        throw new ServerErr(SERVER_ERROR_MESSAGE);
+        throw new NotFoundErr(NOT_FOUND_CARD_MESSAGE);
       }
       res.status(SUCCESS_STATUS).json({ data: updatedCard });
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'CastError') {
+      if (customError instanceof Error && err.name === 'CastError') {
         customError = new BadRequestErr(NOT_FOUND_CARD_MESSAGE);
       }
       next(customError);

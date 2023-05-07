@@ -1,4 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
+import { INVALID_DATA_LINK } from '../constants/constants';
+import { urlRegex } from '../constants/regConst';
 
 const cardSchema = new Schema(
   {
@@ -11,6 +13,12 @@ const cardSchema = new Schema(
     link: {
       type: String,
       required: true,
+      validate: {
+        validator(link: string) {
+          return urlRegex.test(link);
+        },
+        message: INVALID_DATA_LINK,
+      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

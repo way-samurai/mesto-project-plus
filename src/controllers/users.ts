@@ -5,6 +5,7 @@ import ConflictErr from '../errors/ConflictErr';
 import User from '../models/user';
 import { IAppRequest } from '../utils/types';
 import {
+  AUTH_ACCEPTED,
   CONFLICT_EMAIL_UP,
   CREATED_STATUS,
   INVALID_AUTH_DATA,
@@ -33,7 +34,7 @@ export const login = (req: Request, res: Response, next: NextFunction) => {
           maxAge: 3600000 * 24,
         })
         .status(SUCCESS_STATUS)
-        .send({ token });
+        .send({ message: AUTH_ACCEPTED });
     })
     .catch(next);
 };
@@ -65,7 +66,7 @@ export const getUserById = async (
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'CastError') {
+      if (customError instanceof Error && err.name === 'CastError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
       next(customError);
@@ -85,13 +86,7 @@ export const getAuthUser = async (
       }
       res.status(SUCCESS_STATUS).json({ data: user });
     })
-    .catch((err) => {
-      let customError = err;
-      if (err.name === 'CastError') {
-        customError = new BadRequestErr(INVALID_DATA);
-      }
-      next(customError);
-    });
+    .catch(next);
 };
 
 export const createUsers = async (
@@ -114,10 +109,14 @@ export const createUsers = async (
     .then((user) => res.status(CREATED_STATUS).json(user))
     .catch((err) => {
       let customError = err;
-      if (err.name === 'ValidationError') {
+      if (customError instanceof Error && err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
-      if (err.name === 'MongoServerError') {
+      if (
+        customError instanceof Error
+        && err.name === 'MongoServerError'
+        && err.code === 11000
+      ) {
         customError = new ConflictErr(CONFLICT_EMAIL_UP);
       }
       next(customError);
@@ -143,7 +142,7 @@ export const patchUserData = async (
     .catch((err) => {
       let customError = err;
 
-      if (customError.name === 'ValidationError') {
+      if (customError instanceof Error && err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
       next(customError);
@@ -167,7 +166,7 @@ export const patchUserAvatar = async (
     })
     .catch((err) => {
       let customError = err;
-      if (err.name === 'ValidationError') {
+      if (customError instanceof Error && err.name === 'ValidationError') {
         customError = new BadRequestErr(INVALID_DATA);
       }
       next(customError);

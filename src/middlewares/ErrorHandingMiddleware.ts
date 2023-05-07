@@ -8,7 +8,11 @@ export default function errorHandler(
   res: Response,
   next: NextFunction,
 ) {
-  const { statusCode = 500, message = SERVER_ERROR_MESSAGE } = err;
-  res.status(statusCode).send({ message });
+  const { statusCode = 500, message } = err;
+
+  res.status(statusCode).send({
+    // проверяем статус и выставляем сообщение в зависимости от него
+    message: statusCode === 500 ? SERVER_ERROR_MESSAGE : message,
+  });
   next();
 }

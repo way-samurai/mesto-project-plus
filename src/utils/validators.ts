@@ -60,7 +60,7 @@ export const userIdValidator = celebrate({
 
 export const userAvatarValidator = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().custom(urlValidator),
+    avatar: Joi.string().custom(urlValidator).required(),
   }),
 });
 

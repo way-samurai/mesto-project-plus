@@ -1,13 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
+import validator from 'validator';
 import { IUser, IUserModel } from '../utils/types';
-import { INVALID_AUTH_DATA } from '../constants/constants';
+import { INVALID_AUTH_DATA, INVALID_DATA_LINK, INVALID_TEXT_LENGTH } from '../constants/constants';
 import {
   USER_ABOUT_DEFAULT,
   USER_AVATAR_DEFAULT,
   USER_NAME_DEFAULT,
 } from '../constants/userDataDefault';
 import UnauthErr from '../errors/Unautorized';
+import { urlRegex } from '../constants/regConst';
 
 const userSchema = new Schema<IUser>(
   {
@@ -15,6 +17,9 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
       unique: true,
+      validate: {
+        validator: (valid: string) => validator.isEmail(valid),
+      },
     },
     password: {
       type: String,
@@ -32,10 +37,20 @@ const userSchema = new Schema<IUser>(
       minlength: 2,
       maxlength: 30,
       default: USER_ABOUT_DEFAULT,
+      validate: {
+        validator: (valid: string) => valid.length > 2 && valid.length < 30,
+        message: INVALID_TEXT_LENGTH,
+      },
     },
     avatar: {
       type: String,
       default: USER_AVATAR_DEFAULT,
+      validate: {
+        validator(link: string) {
+          return urlRegex.test(link);
+        },
+        message: INVALID_DATA_LINK,
+      },
     },
   },
   {

@@ -8,6 +8,7 @@ const CONFLICT_STATUS = 409;
 const SERVER_ERROR_STATUS = 500;
 
 const SERVER_ERROR_MESSAGE = 'Произошла ошибка на сервере';
+const NOT_FOUND_PAGE_MESSAGE = 'Страница не найдена';
 const NOT_FOUND_USER_MESSAGE = 'Пользователь не найден';
 const NOT_FOUND_USERS_MESSAGE = 'Пользователи не найдены';
 const NOT_FOUND_CARD_MESSAGE = 'Карточкa не найденa';
@@ -19,10 +20,14 @@ const INVALID_AUTH_DATA = 'Неправильные почта или парол
 const NEED_AUTH = 'Необходима авторизация';
 const FORBIDDEN_MESSAGE = 'Вы не являетесь владельцем карточки';
 const CONFLICT_EMAIL_UP = 'Пользователь с таким email уже зарегестрирован';
+const INVALID_TEXT_LENGTH = 'Текст короче 2 символов или длиннее 30';
 
 const DELETE_CARD_SUCCES = 'Карточка успешно удалена';
+const AUTH_ACCEPTED = 'Авторизация прошла успешно';
 
 export {
+  INVALID_TEXT_LENGTH,
+  NOT_FOUND_PAGE_MESSAGE,
   INVALID_DATA_LINK,
   INVALID_DATA_EMAIL,
   CONFLICT_STATUS,
@@ -44,4 +49,5 @@ export {
   NOT_FOUND_CARDS_MESSAGE,
   INVALID_DATA,
   NOT_FOUND_CARD_MESSAGE,
+  AUTH_ACCEPTED,
 };
